@@ -40,7 +40,7 @@
       ],
       "secrets": [
         {
-          "valueFrom": "<<TODO: set ARN of secrets manager>>",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:497196579670:secret:aws-upskilling-secret-cicd-Zi4oXb",
           "name": "SPRING_APPLICATION_JSON"
         }
       ],
