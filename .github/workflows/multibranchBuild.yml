@@ -71,6 +71,9 @@ jobs:
 
       - name: Verify identity
         run: aws sts get-caller-identity
+      
+      - name: Check ECR
+        run: aws cer describe-repositories --region "$AWS_REGION"
 
       - name: Login to Amazon ECR
         id: login-ecr
