@@ -251,7 +251,7 @@ First, please set secrets (credentials) in AWS Secrets Manager:
 }
 ```
 
-You also need to update task.json and replace **arn:aws:secretsmanager:eu-central-1:497196579670:secret:backend-secretsmanager-test-eu-central-1-tWLxJy** with ARN of your secrets manager.
+You also need to update task.json and replace **arn:aws:secretsmanager:eu-central-1:497196579670:secret:backend-secretsmanager-test-eu-central-1-1HaQ7X** with ARN of your secrets manager.
 **REMEMBER!** Push all changes to your forked repository!
 
 Then, please make sure that **BACKEND_EMEA_TEST_SMOKETEST_BACKEND_PASSWORD** repository secret is set to "welt", as this is the password for the above test user, that will be used for smoke tests.
