@@ -32,14 +32,15 @@ jobs:
       AWS_ACCOUNT: ${{ needs.properties.outputs.AWS_ACCOUNT }}
       AWS_PROFILE: ${{ needs.properties.outputs.PROFILE }}
       AWS_KEY: ${{ secrets.BACKEND_EMEA_TEST_AWS_KEY}}
-      AWS_SECRET: ${{ secrets.BACKEN_EMEA_TEST_AWS_SECRET}}
+      AWS_SECRET: ${{ secrets.BACKEND_EMEA_TEST_AWS_SECRET}}
       AWS_REGION: ${{ needs.properties.outputs.REGION }}
       CLUSTER_NAME: ${{needs.properties.outputs.CLUSTER_NAME}}
       SERVICE_NAME: ${{needs.properties.outputs.SERVICE_NAME}}
       SKIP_SMOKE_TESTS: ${{github.event.inputs.skipSmokeTests}}
       SMOKETEST_BACKEND_PASSWORD: ${{ secrets.BACKEND_EMEA_TEST_SMOKETEST_BACKEND_PASSWORD}}
       
-    #    TODO Checkout, JDK 17 setup, Maven setup, Build with JaCoCo, Configure AWS credentials, Login to Amazon ECR, Push image to Amazon ECR, Deploy Amazon ECS task definition, Run smoke tests if not skipped
+    #    TODO Checkout, JDK 17 setup, Maven setup, Build with JaCoCo, Configure AWS credentials, Login to Amazon ECR, Push image to Amazon ECR,
+    # Deploy Amazon ECS task definition, Run smoke tests if not skipped
     
     steps:
       - name: Checkout
@@ -58,15 +59,15 @@ jobs:
         with:
           maven-version: 3.8.2
 
-      - name: Build
+      - name: Build with JaCoCO
         run: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package org.jacoco:jacoco-maven-plugin:report
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ env.AWS_KEY }}
           aws-secret-access-key: ${{ env.AWS_SECRET }}
-          aws-region: ${{ env.REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -91,8 +92,8 @@ jobs:
           cluster: ${{ env.CLUSTER_NAME }}
           wait-for-service-stability: true
 
-      - name: Run smoke tests
-        if: ${{ env.SKIP_SMOKE_TESTS == 'false' }}
+      - name: Run smoke tests if not skipped
+        if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.skipSmokeTests != 'true'}}
         run: |
           mvn -f pom.xml clean test -P st,BACKEND_EMEA_TEST
 
