@@ -69,6 +69,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.BACKEND_EMEA_TEST_AWS_SECRET }}
           aws-region: ${{ needs.properties.outputs.REGION }}
 
+      - name: Verify identity
+        run: aws sts get-caller-identity
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
