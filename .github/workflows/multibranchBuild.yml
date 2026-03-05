@@ -38,7 +38,7 @@ jobs:
       SKIP_SMOKE_TESTS: ${{github.event.inputs.skipSmokeTests}}
       SMOKETEST_BACKEND_PASSWORD: ${{ secrets.BACKEND_EMEA_TEST_SMOKETEST_BACKEND_PASSWORD}}
       
-    #    TODO Checkout, JDK 17 setup, Maven setup, Build with JaCoCo, Configure AWS credentials, Login to Amazon ECR, Push image to Amazon ECR,
+    #TODO Checkout, JDK 17 setup, Maven setup, Build with JaCoCo, Configure AWS credentials, Login to Amazon ECR, Push image to Amazon ECR,
     # Deploy Amazon ECS task definition, Run smoke tests if not skipped
     
     steps:
@@ -47,6 +47,7 @@ jobs:
         with:
           fetch-depth: 0
 
+#Setup java
       - name: JDK 17 setup
         uses: actions/setup-java@v3
         with:
@@ -62,7 +63,7 @@ jobs:
         run: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package org.jacoco:jacoco-maven-plugin:report
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.BACKEND_EMEA_TEST_AWS_KEY }}
           aws-secret-access-key: ${{ secrets.BACKEND_EMEA_TEST_AWS_SECRET }}
@@ -95,8 +96,8 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: assembly-fargate/src/main/resources/fargate/BACKEND_EMEA_TEST/task.json
-          service: ${{ env.SERVICE_NAME }}
-          cluster: ${{ env.CLUSTER_NAME }}
+          service: ${{env.SERVICE_NAME }}
+          cluster: ${{ env.CLUSTER_NAME}}
           wait-for-service-stability: true
 
       - name: Run smoke tests if not skipped
